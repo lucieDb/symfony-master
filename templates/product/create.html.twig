@@ -2,6 +2,11 @@
 
 {% block body %}
     <div class="container">
+    {% if edit %}
+        <h1>Modifier un produit</h1>
+    {% else %}
+        <h1>Créer un produit</h1>
+    {% endif %}
         {{ form_start(form) }}
             {{ form_label(form.name, 'Nom', {'label_attr': {
                 'class': 'text-success'
@@ -11,7 +16,7 @@
             {{ form_widget(form) }}
 
             <button class="btn btn-primary" formnovalidate>
-                Créer le produit
+                {{ edit ? 'Modifier' : 'Créer' }}
             </button>
         {{ form_end(form) }}
     </div>

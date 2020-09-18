@@ -28,6 +28,7 @@ class ProductController extends AbstractController
         }
         return $this->render('product/create.html.twig', [
             'form' => $form->createView(),
+            'edit' => false,
         ]);
     }
 
@@ -38,7 +39,7 @@ class ProductController extends AbstractController
     {
         $products = $repository->findAll();
 
-        dump($products);
+        // dump($products);
 
         return $this->render('product/index.html.twig', [
             'products' => $products,
@@ -60,5 +61,39 @@ class ProductController extends AbstractController
         return $this->render('product/show.html.twig', [
             'product' => $product,
         ]);
+    }
+
+    /**
+     * @Route("/product/edit/{id}", name="product_edit")
+     */
+    public function edit(Product $product, Request $request, EntityManagerInterface $entityManager)
+    {
+        $form = $this->createForm(ProductType::class, $product);
+
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush(); // on exécute la requête (INSERT...)
+        }
+        return $this->render('product/create.html.twig', [
+            'form' => $form->createView(),
+            'edit' => true,
+        ]);
+    }
+
+    /**
+     * @Route("/product/remove/{id}", name="product_remove")
+     */
+    public function remove(Product $product, EntityManagerInterface $entityManager, Request $request)
+    {
+        $token = $request->request->get('csrf_token');
+        
+        //Ici, on se protège d'une faille CSRF
+        if($this->isCsrfTokenValid('delete-'.$product->getId(), $token)){
+            $entityManager->remove($product);
+            $entityManager->flush(); // on exécute la requête (INSERT...)
+        }
+
+        return $this->redirectToRoute('product_index');
     }
 }
