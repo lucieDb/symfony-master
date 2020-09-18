@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Form\ProductType;
+use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,8 +26,39 @@ class ProductController extends AbstractController
             $entityManager->persist($product); // on persiste l'objet
             $entityManager->flush(); // on exécute la requête (INSERT...)
         }
-        return $this->render('product/index.html.twig', [
+        return $this->render('product/create.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/product",name="product_index")
+     */
+    public function index(ProductRepository $repository)
+    {
+        $products = $repository->findAll();
+
+        dump($products);
+
+        return $this->render('product/index.html.twig', [
+            'products' => $products,
+        ]);
+    }
+
+    /**
+     * @Route("/product/{id}", name="product_show")
+     */
+    public function show($id, ProductRepository $repository)
+    {
+        
+        $product = $repository->find($id);
+
+        if(!$product){
+            throw $this->createNotFoundException();
+        }
+
+        return $this->render('product/show.html.twig', [
+            'product' => $product,
         ]);
     }
 }

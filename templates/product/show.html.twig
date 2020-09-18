@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-6">
+            <img class="img-fluid" src="" alt="une photo">
+        </div>
+        <div class="col-lg-6">
+            <h1>{{ product.name }}</h1>
+            <p>{{ product.description }}</p>
+            <p>{{ product.price / 100 }} €</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
