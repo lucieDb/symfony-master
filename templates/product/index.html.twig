@@ -9,7 +9,8 @@
             <div class="col-3">
                 <div class="card">
                     <div class="shadow">
-                        <img class="card-img" src="" alt="une photo">
+                    {% if product.image %}
+                        <img class="card-img" src="{{ asset('uploads/' ~ product.image) }}" alt="une photo">
                         <div class="card-body">
                             <h5 class="card-title">{{ product.name }}</h5>
                             <p>{{ product.description }}</p>

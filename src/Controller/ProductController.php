@@ -29,14 +29,16 @@ class ProductController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             //on récupère l'image pour l'upload
             $image = $form->get('image')->getData();
+            $fileName = uniqid().'.'.$image->guessExtension();
 
             //on déplace l'image uploadé vers un dossier de notre projet
-            $image->move($this->getParameter('kernel.project_dir').'/public/uploads',uniqid().'.'.$image->guessExtension());
+            $image->move($this->getParameter('kernel.project_dir').'/public/uploads',
+            $fileName);
 
+            $product->setImage($fileName);
 
             //@todo : ajouter une propriété image dans la classe product
             //$product->setImage($name);
-
 
             $entityManager->persist($product); // on persiste l'objet
             $entityManager->flush(); // on exécute la requête (INSERT...)
